@@ -7,11 +7,13 @@ import 'package:mrc/Widgets/widget.dart';
 import 'package:mrc/utils/app_routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../utils/utils.dart';
+import '../../../utils/utils.dart';
+import '../../Model/universities_model.dart' as mrc;
 
 class CardDetailPage extends StatefulWidget {
-  final dynamic data;
-  const CardDetailPage({Key? key, this.data}) : super(key: key);
+  final mrc.Datum universitiesInfo;
+  const CardDetailPage({Key? key, required this.universitiesInfo})
+      : super(key: key);
 
   @override
   State<CardDetailPage> createState() => _CardDetailPageState();
@@ -65,8 +67,9 @@ class _CardDetailPageState extends State<CardDetailPage> {
                           type: CoolAlertType.loading,
                           barrierDismissible: false);
                       Response res = await Api.applyForApp(
-                          widget.data["id"].toString(),
-                          widget.data["courses"][selectedId]["id"].toString(),
+                          widget.universitiesInfo.id.toString(),
+                          widget.universitiesInfo.courses![selectedId].id
+                              .toString(),
                           userData["data"]["details"]["id"].toString(),
                           userData["data"]["id"].toString());
 
@@ -110,18 +113,42 @@ class _CardDetailPageState extends State<CardDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 200,
-              margin: const EdgeInsets.symmetric(vertical: 15),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                    image: NetworkImage(
-                      widget.data["banner"] ??
-                          "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                widget.universitiesInfo.banner ??
+                    "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+                errorBuilder: (context, error, stackTrace) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      "http://www.sacredheart.edu/media/shu-media/site-assets/images/Sacred-Heart-OG.png",
+                      height: 200,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
                     ),
-                    fit: BoxFit.cover),
+                  );
+                },
+                fit: BoxFit.cover,
+                height: 200,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  }
+                  return CircularProgressIndicator(
+                    value: loadingProgress.cumulativeBytesLoaded.toDouble(),
+                  );
+                },
               ),
             ),
             const SizedBox(
@@ -148,11 +175,11 @@ class _CardDetailPageState extends State<CardDetailPage> {
             const SizedBox(
               height: 10,
             ),
-            (widget.data["courses"] as List).isEmpty
+            (widget.universitiesInfo.courses as List).isEmpty
                 ? const CustomText(text: "No courses available at the moment")
                 : Row(
                     children: List.generate(
-                        (widget.data["courses"] as List).length,
+                        (widget.universitiesInfo.courses as List).length,
                         (index) => GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -175,7 +202,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 8),
                                   child: Text(
-                                    widget.data["courses"][index]["name"]
+                                    widget.universitiesInfo.courses![index].name
                                         .toString(),
                                     style: TextStyle(
                                         color: selectedId == index
@@ -210,7 +237,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
             const SizedBox(
               height: 10,
             ),
-            CustomText(text: widget.data["ranking"]),
+            CustomText(text: widget.universitiesInfo.ranking!),
           ],
         ),
       ),

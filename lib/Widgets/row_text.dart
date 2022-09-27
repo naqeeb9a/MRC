@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mrc/Screens/DetailPages/detail_page.dart';
+import 'package:mrc/MVVM/Views/DetailPages/detail_page.dart';
 import 'package:mrc/Widgets/widget.dart';
 import 'package:mrc/utils/app_routes.dart';
 import 'package:mrc/utils/utils.dart';
 
 class RowText extends StatelessWidget {
   final String text;
-  final dynamic future;
-  const RowText({Key? key, required this.text, this.future}) : super(key: key);
+  const RowText({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,6 @@ class RowText extends StatelessWidget {
               context,
               DetailPage(
                 appBarText: text,
-                future: future,
               )),
           child: const CustomText(
             text: "View All",

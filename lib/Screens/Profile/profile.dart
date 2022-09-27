@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mrc/Api/api.dart';
-import 'package:mrc/Screens/Authentication/login.dart';
+import 'package:mrc/MVVM/Views/Authentication/login.dart';
 import 'package:mrc/Screens/Profile/applications.dart';
 import 'package:mrc/Screens/Profile/edit_profile.dart';
 import 'package:mrc/Widgets/widget.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mrc/Api/api.dart';
-import 'package:mrc/Screens/DetailPages/detail_page.dart';
+import 'package:mrc/MVVM/Views/ProgressScreen/progress_screen.dart';
 import 'package:mrc/Screens/Home/homepage.dart';
 import 'package:mrc/Screens/Notifications/notifications.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -32,11 +31,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
         backButton: false,
         givenList: universityList,
       ),
-      DetailPage(
-        appBarText: 'Favourities',
-        backIcon: false,
-        future: Api.getUniversities(),
-      ),
+      const ProgressScreen(),
       const Profile()
     ];
   }
@@ -67,7 +62,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.heart),
+        icon: const Icon(CupertinoIcons.square_line_vertical_square_fill),
         title: ("Home"),
         iconSize: 25,
         activeColorPrimary: primaryColor,

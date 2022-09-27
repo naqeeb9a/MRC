@@ -7,3 +7,5 @@ const kGrey = Colors.grey;
 const ktransparent = Colors.transparent;
 dynamic userData;
 dynamic globalContext;
+
+const baseUrl = "https://mrc.devroom.live";

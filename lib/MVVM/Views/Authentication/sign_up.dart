@@ -4,8 +4,8 @@ import 'package:http/http.dart';
 import 'package:mrc/Api/api.dart';
 import 'package:mrc/utils/app_routes.dart';
 
-import '../../Widgets/widget.dart';
-import '../../utils/utils.dart';
+import '../../../Widgets/widget.dart';
+import '../../../utils/utils.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);

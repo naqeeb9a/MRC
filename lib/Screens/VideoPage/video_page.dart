@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mrc/Widgets/choices.dart';
 import 'package:mrc/Widgets/custom_search.dart';
-import 'package:mrc/Widgets/custom_uni_cards.dart';
+import 'package:mrc/MVVM/Views/custom_uni_cards.dart';
 import 'package:mrc/Widgets/row_text.dart';
 import 'package:mrc/Widgets/widget.dart';
 import 'package:mrc/utils/data.dart';
@@ -61,9 +61,7 @@ class VideoPage extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            CustomUniCards(
-              givenList: givenList,
-            ),
+            const CustomUniCards(),
             const SizedBox(
               height: 20,
             ),
@@ -74,9 +72,7 @@ class VideoPage extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            CustomUniCards(
-              givenList: givenList,
-            ),
+            const CustomUniCards(),
             const SizedBox(
               height: 20,
             ),

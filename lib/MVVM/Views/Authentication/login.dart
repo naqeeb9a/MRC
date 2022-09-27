@@ -4,16 +4,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:mrc/Api/api.dart';
 import 'package:mrc/Api/functionality.dart';
-import 'package:mrc/Screens/Authentication/sign_up.dart';
+import 'package:mrc/MVVM/Views/Authentication/sign_up.dart';
 
 import 'package:flutter/material.dart';
 import 'package:mrc/Screens/IntroScreens/intro.dart';
 import 'package:mrc/Screens/TabBar/tab_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../Widgets/widget.dart';
-import '../../utils/app_routes.dart';
-import '../../utils/utils.dart';
+import '../../../Widgets/widget.dart';
+import '../../../utils/app_routes.dart';
+import '../../../utils/utils.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);

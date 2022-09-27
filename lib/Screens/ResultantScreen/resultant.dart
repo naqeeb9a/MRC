@@ -1,13 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:mrc/Widgets/custom_uni_cards.dart';
+import 'package:mrc/MVVM/Views/custom_uni_cards.dart';
 import 'package:mrc/Widgets/general_app_search.dart';
 import 'package:mrc/Widgets/row_text.dart';
 import 'package:mrc/Widgets/widget.dart';
-
-import '../../Api/api.dart';
-import '../../Widgets/custom_uni_cards_shimmer.dart';
 
 class ResultantScreen extends StatelessWidget {
   final String appBarTitle;
@@ -31,81 +26,56 @@ class ResultantScreen extends StatelessWidget {
           appBarHeight: 50),
       body: SingleChildScrollView(
         child: Column(
-          children: [
-            const SizedBox(
+          children: const [
+            SizedBox(
               height: 20,
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: GeneralAppSearchWidget(
                 enabled: false,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: EdgeInsets.symmetric(horizontal: 12),
               child: RowText(
-                  text: "Canada", future: Api.searchItem(country: "canada")),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            FutureBuilder(
-                future: Api.searchItem(country: "canada"),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    var jsonData = jsonDecode(snapshot.data.body);
-                    return CustomUniCards(givenList: jsonData["data"]);
-                  } else {
-                    return const CustomUniCardsShimmer();
-                  }
-                }),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: RowText(
-                text: "USA",
-                future: Api.searchItem(country: "usa"),
+                text: "Canada",
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 20,
             ),
-            FutureBuilder(
-                future: Api.searchItem(country: "usa"),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    var jsonData = jsonDecode(snapshot.data.body);
-                    return CustomUniCards(givenList: jsonData["data"]);
-                  } else {
-                    return const CustomUniCardsShimmer();
-                  }
-                }),
-            const SizedBox(
+            CustomUniCards(),
+            SizedBox(
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: RowText(text: "UK", future: Api.searchItem(country: "uk")),
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: RowText(
+                text: "USA",
+              ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 20,
             ),
-            FutureBuilder(
-                future: Api.searchItem(country: "uk"),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    var jsonData = jsonDecode(snapshot.data.body);
-                    return CustomUniCards(givenList: jsonData["data"]);
-                  } else {
-                    return const CustomUniCardsShimmer();
-                  }
-                }),
-            const SizedBox(
+            CustomUniCards(),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: RowText(
+                text: "UK",
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            CustomUniCards(),
+            SizedBox(
               height: 20,
             ),
           ],

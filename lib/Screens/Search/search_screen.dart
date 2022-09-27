@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:mrc/Api/api.dart';
 import 'package:mrc/Widgets/general_app_search.dart';
-import 'package:mrc/Widgets/rectangle_uni_cards.dart';
+import 'package:mrc/MVVM/Views/rectangle_uni_cards.dart';
 import 'package:mrc/Widgets/widget.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -85,10 +85,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         ? const Center(
                             child: CustomText(text: "No results found"),
                           )
-                        : SingleChildScrollView(
-                            child: RectangleUniCards(
-                              list: futureData,
-                            ),
+                        : const SingleChildScrollView(
+                            child: RectangleUniCards(),
                           ),
           ),
         ],
