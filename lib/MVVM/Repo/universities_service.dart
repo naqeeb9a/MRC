@@ -25,4 +25,24 @@ class UniversititesService {
       return Failure(103, "Unknown Error");
     }
   }
+
+  static Future<Object> getSearchedUniversitites(
+      String? name, String? country, String? ranking, String? state) async {
+    try {
+      var url = Uri.parse(
+          "$baseUrl/api/universities?name=$name&country=$country&state=$state&ranking=$ranking");
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        return Success(
+            response.statusCode, universitiesInfoModelFromJson(response.body));
+      }
+      return Failure(response.statusCode, jsonDecode(response.body));
+    } on HttpException {
+      return Failure(101, "No internet");
+    } on FormatException {
+      return Failure(102, "Invalid format");
+    } catch (e) {
+      return Failure(103, "Unknown Error");
+    }
+  }
 }

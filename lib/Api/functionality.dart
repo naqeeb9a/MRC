@@ -7,7 +7,6 @@ class Functionality {
   static checkLoginStatus() async {
     SharedPreferences user = await SharedPreferences.getInstance();
     String? userInfo = user.getString("user");
-
     if (userInfo != null) {
       if (userInfo == "guest") {
         userData = userInfo;

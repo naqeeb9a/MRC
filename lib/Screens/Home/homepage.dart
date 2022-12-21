@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mrc/MVVM/View%20Model/universities_view_model.dart';
 import 'package:mrc/Widgets/custom_slider.dart';
 import 'package:mrc/Widgets/custom_text.dart';
 import 'package:mrc/MVVM/Views/custom_uni_cards.dart';
 import 'package:mrc/Widgets/general_app_search.dart';
 import 'package:mrc/Widgets/row_text.dart';
 import 'package:mrc/utils/utils.dart';
+import 'package:provider/provider.dart';
+
+import '../../Widgets/custom_uni_cards_shimmer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,11 +20,11 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              SizedBox(
+            children: [
+              const SizedBox(
                 height: 20,
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 child: CustomText(
                   text: "Find Your \ndream degree",
@@ -29,39 +33,53 @@ class HomePage extends StatelessWidget {
                   color: primaryColor,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 child: GeneralAppSearchWidget(
                   enabled: false,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              CustomSlider(),
-              SizedBox(
+              const CustomSlider(),
+              const SizedBox(
                 height: 10,
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 child: RowText(
                   text: "Popular Universities",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              CustomUniCards(),
-              SizedBox(
+              uniCardsView(context),
+              const SizedBox(
                 height: 20,
               )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget uniCardsView(BuildContext context) {
+    UniversitiesViewModel universitiesInfoModel =
+        context.watch<UniversitiesViewModel>();
+    if (universitiesInfoModel.loading) {
+      return const CustomUniCardsShimmer();
+    }
+    if (universitiesInfoModel.modelError != null) {
+      return const CustomText(text: "Error ");
+    }
+    return CustomUniCards(
+      data: universitiesInfoModel.universitiesInfoModel!.data!,
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mrc/MVVM/View%20Model/universities_view_model.dart';
 import 'package:mrc/MVVM/Views/rectangle_uni_cards.dart';
+import 'package:provider/provider.dart';
 
 import '../../../Widgets/widget.dart';
 
@@ -21,9 +23,15 @@ class DetailPage extends StatelessWidget {
           appBar: AppBar(),
           widgets: const [],
           appBarHeight: 50),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
-            padding: EdgeInsets.only(bottom: 10), child: RectangleUniCards()),
+            padding: const EdgeInsets.only(bottom: 10),
+            child: RectangleUniCards(
+              data: context
+                  .read<UniversitiesViewModel>()
+                  .universitiesInfoModel!
+                  .data!,
+            )),
       ),
     );
   }

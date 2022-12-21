@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mrc/MVVM/Views/custom_uni_cards.dart';
+import 'package:mrc/MVVM/View%20Model/universities_view_model.dart';
 import 'package:mrc/Widgets/general_app_search.dart';
 import 'package:mrc/Widgets/row_text.dart';
 import 'package:mrc/Widgets/widget.dart';
+import 'package:provider/provider.dart';
+
+import '../../MVVM/Views/custom_uni_cards.dart';
 
 class ResultantScreen extends StatelessWidget {
   final String appBarTitle;
@@ -26,56 +29,71 @@ class ResultantScreen extends StatelessWidget {
           appBarHeight: 50),
       body: SingleChildScrollView(
         child: Column(
-          children: const [
-            SizedBox(
+          children: [
+            const SizedBox(
               height: 20,
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: GeneralAppSearchWidget(
                 enabled: false,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: RowText(
                 text: "Canada",
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            CustomUniCards(),
-            SizedBox(
+            CustomUniCards(
+              data: context
+                  .read<UniversitiesViewModel>()
+                  .universitiesInfoModel!
+                  .data!,
+            ),
+            const SizedBox(
               height: 20,
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: RowText(
                 text: "USA",
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            CustomUniCards(),
-            SizedBox(
+            CustomUniCards(
+              data: context
+                  .read<UniversitiesViewModel>()
+                  .universitiesInfoModel!
+                  .data!,
+            ),
+            const SizedBox(
               height: 20,
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: RowText(
                 text: "UK",
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            CustomUniCards(),
-            SizedBox(
+            CustomUniCards(
+              data: context
+                  .read<UniversitiesViewModel>()
+                  .universitiesInfoModel!
+                  .data!,
+            ),
+            const SizedBox(
               height: 20,
             ),
           ],

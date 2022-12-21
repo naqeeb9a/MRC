@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart';
-import 'package:mrc/Api/api.dart';
+import 'package:mrc/MVVM/View%20Model/Searched%20University%20View/searched_university_view_model.dart';
 import 'package:mrc/Widgets/general_app_search.dart';
 import 'package:mrc/MVVM/Views/rectangle_uni_cards.dart';
 import 'package:mrc/Widgets/widget.dart';
+import 'package:mrc/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -17,80 +15,86 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
-  List futureData = [];
-  getSearchResult() async {
-    setState(() {
-      loading = true;
-    });
-    Response res = await Api.searchItem(value: _controller.text);
-    if (res.statusCode == 200) {
-      setState(() {
-        loading = false;
-      });
-      var jsonData = jsonDecode(res.body);
-      futureData = jsonData["data"];
-    } else {
-      setState(() {
-        loading = false;
-      });
-      Fluttertoast.showToast(msg: "Try again");
-    }
-  }
-
-  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
+    SearchedUniversitiesViewModel searchedUniversitiesViewModel =
+        context.watch<SearchedUniversitiesViewModel>();
     return Scaffold(
-      appBar: BaseAppBar(
-        title: "Search",
-        appBar: AppBar(),
-        widgets: const [],
-        appBarHeight: 50,
-        automaticallyImplyLeading: true,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: GeneralAppSearchWidget(
-                controller: _controller, function: getSearchResult),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          _controller.text.isEmpty
-              ? const SizedBox()
-              : const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: CustomText(text: "Your filter result"),
-                ),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: _controller.text.isEmpty
-                ? const Center(
-                    child: CustomText(text: "Search for something"),
-                  )
-                : loading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : futureData.isEmpty
-                        ? const Center(
-                            child: CustomText(text: "No results found"),
-                          )
-                        : const SingleChildScrollView(
-                            child: RectangleUniCards(),
-                          ),
-          ),
-        ],
+        appBar: BaseAppBar(
+          title: "Search",
+          appBar: AppBar(),
+          widgets: const [],
+          appBarHeight: 50,
+          automaticallyImplyLeading: true,
+        ),
+        body: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: GeneralAppSearchWidget(
+                  controller: _controller,
+                  function: () async {
+                    searchedUniversitiesViewModel.setModelError(null);
+                    await searchedUniversitiesViewModel
+                        .getSearchedUniversitites(name: _controller.text);
+                  }),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            _controller.text.isEmpty
+                ? const SizedBox()
+                : const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: CustomText(text: "Your filter result"),
+                  ),
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(child: searchedView(searchedUniversitiesViewModel)),
+          ],
+        ));
+  }
+
+  Widget searchedView(
+      SearchedUniversitiesViewModel searchedUniversitiesViewModel) {
+    if (searchedUniversitiesViewModel.universitiesInfoModel == null) {
+      return const Center(
+        child: CustomText(text: "Search anything"),
+      );
+    }
+    if (searchedUniversitiesViewModel.loading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    if (searchedUniversitiesViewModel.modelError != null) {
+      return Center(
+        child: CustomText(
+            text: searchedUniversitiesViewModel.modelError!.errorResponse
+                .toString()),
+      );
+    }
+    if (searchedUniversitiesViewModel.universitiesInfoModel!.data!.isEmpty) {
+      return const Center(
+        child: CustomText(text: "No results found"),
+      );
+    }
+
+    return SingleChildScrollView(
+      child: RectangleUniCards(
+        data: searchedUniversitiesViewModel.universitiesInfoModel!.data!,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    searchFilter = {"country": "", "state": "", "ranking": ""};
+    super.dispose();
   }
 }

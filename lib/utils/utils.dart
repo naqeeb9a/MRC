@@ -9,3 +9,4 @@ dynamic userData;
 dynamic globalContext;
 
 const baseUrl = "https://mrc.devroom.live";
+Map searchFilter = {"country": "", "state": "", "ranking": ""};

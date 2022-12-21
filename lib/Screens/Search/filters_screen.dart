@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mrc/MVVM/View%20Model/Searched%20University%20View/searched_university_view_model.dart';
 import 'package:mrc/Widgets/choices.dart';
 import 'package:mrc/Widgets/widget.dart';
 import 'package:mrc/utils/app_routes.dart';
 import 'package:mrc/utils/data.dart';
 import 'package:mrc/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class FilterScreen extends StatelessWidget {
-  const FilterScreen({Key? key}) : super(key: key);
+  final String text;
+  const FilterScreen({Key? key, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,17 @@ class FilterScreen extends StatelessWidget {
                 buttonColor: primaryColor,
                 text: "Apply Filters",
                 textColor: kWhite,
-                function: () {}),
+                function: () {
+                  context
+                      .read<SearchedUniversitiesViewModel>()
+                      .getSearchedUniversitites(
+                          name: text,
+                          country: searchFilter["country"],
+                          state: searchFilter["state"],
+                          ranking: searchFilter["ranking"]);
+                  searchFilter = {"country": "", "state": "", "ranking": ""};
+                  KRoutes.pop(context);
+                }),
           ],
         ),
       ),
@@ -65,6 +78,7 @@ class FilterScreen extends StatelessWidget {
               ),
               Choices(
                 filters: countryList,
+                category: 'country',
               ),
               const SizedBox(
                 height: 20,
@@ -77,19 +91,10 @@ class FilterScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              Choices(filters: provinceList),
-              const SizedBox(
-                height: 20,
+              Choices(
+                filters: provinceList,
+                category: 'state',
               ),
-              const CustomText(
-                text: "Study Level",
-                fontsize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Choices(filters: studyLevelList),
               const SizedBox(
                 height: 20,
               ),
@@ -101,7 +106,10 @@ class FilterScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              Choices(filters: rankingList),
+              Choices(
+                filters: rankingList,
+                category: 'ranking',
+              ),
               const SizedBox(
                 height: 20,
               ),

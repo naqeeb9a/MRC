@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mrc/Api/api.dart';
 import 'package:mrc/MVVM/Views/Authentication/login.dart';
 import 'package:mrc/Screens/Profile/applications.dart';
 import 'package:mrc/Screens/Profile/edit_profile.dart';
@@ -11,7 +8,8 @@ import 'package:mrc/Widgets/widget.dart';
 import 'package:mrc/utils/app_routes.dart';
 import 'package:mrc/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
+
+import '../../MVVM/Views/DetailPages/detail_page.dart';
 
 class Profile extends StatelessWidget {
   const Profile({Key? key}) : super(key: key);
@@ -47,25 +45,24 @@ class Profile extends StatelessWidget {
           }
         }
       },
-      // {
-      //   "icon": const Icon(
-      //     CupertinoIcons.heart,
-      //     color: primaryColor,
-      //   ),
-      //   "setting": "Favourites",
-      //   "function": () {
-      //     if (userData == "guest") {
-      //       Fluttertoast.showToast(msg: "Login to Access");
-      //     } else {
-      //       KRoutes.push(
-      //           context,
-      //           DetailPage(
-      //             appBarText: 'Favourities',
-      //             future: Api.getUniversities(),
-      //           ));
-      //     }
-      //   }
-      // },
+      {
+        "icon": const Icon(
+          CupertinoIcons.heart,
+          color: primaryColor,
+        ),
+        "setting": "Favourites",
+        "function": () {
+          if (userData == "guest") {
+            Fluttertoast.showToast(msg: "Login to Access");
+          } else {
+            KRoutes.push(
+                context,
+                const DetailPage(
+                  appBarText: 'Favourities',
+                ));
+          }
+        }
+      },
       {
         "icon": const Icon(
           CupertinoIcons.lock,
@@ -134,7 +131,7 @@ class Profile extends StatelessWidget {
                       CustomText(
                         text: userData == "guest"
                             ? "Guest"
-                            : userData["data"]["details"]["lead_name"],
+                            : userData["data"]["name"],
                         fontWeight: FontWeight.bold,
                         fontsize: 20,
                       ),
@@ -144,148 +141,14 @@ class Profile extends StatelessWidget {
                       CustomText(
                         text: userData == "guest"
                             ? "guest@mrc.com"
-                            : userData["data"]["details"]["email"],
+                            : userData["data"]["email"],
                         fontsize: 15,
                         color: kblack.withOpacity(0.6),
                       ),
                       const SizedBox(
                         height: 10,
+                        width: double.infinity,
                       ),
-                      const Divider(
-                        color: kblack,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          CustomText(text: "Current Progress"),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 15,
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      userData == "guest"
-                          ? Row(
-                              children: [
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: LinearProgressIndicator(
-                                      value: 0.6,
-                                      color: kGrey,
-                                      backgroundColor: kGrey.withOpacity(0.2),
-                                      minHeight: 10,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                const CustomText(text: "60%")
-                              ],
-                            )
-                          : FutureBuilder(
-                              future: Api.getProgress(
-                                  userData["data"]["details"]["id"].toString()),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  if (snapshot.data.statusCode == 200) {
-                                    var updatedData =
-                                        jsonDecode(snapshot.data.body);
-                                    return Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: LinearProgressIndicator(
-                                                  value: updatedData["data"]
-                                                          ["status"] /
-                                                      10,
-                                                  color: primaryColor,
-                                                  backgroundColor:
-                                                      kGrey.withOpacity(0.2),
-                                                  minHeight: 10,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            CustomText(
-                                                text:
-                                                    "${(updatedData["data"]["status"] * 10).toString()} %")
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          children: [
-                                            const CustomText(text: "   •   "),
-                                            CustomText(
-                                                text: updatedData["data"]
-                                                    ["status_name"]),
-                                          ],
-                                        ),
-                                      ],
-                                    );
-                                  } else {
-                                    return const CustomText(
-                                        text: "Invalid response");
-                                  }
-                                } else {
-                                  return Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Shimmer.fromColors(
-                                              highlightColor: kWhite,
-                                              baseColor: kGrey.withOpacity(0.2),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color: kWhite,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                height: 15,
-                                                width: double.infinity,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Shimmer.fromColors(
-                                          highlightColor: kWhite,
-                                          baseColor: kGrey.withOpacity(0.2),
-                                          child: Container(
-                                            color: kWhite,
-                                            height: 15,
-                                            width: 100,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                }
-                              },
-                            ),
                     ],
                   ),
                   Positioned(

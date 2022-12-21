@@ -1,29 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:mrc/MVVM/Model/universities_model.dart';
 import 'package:mrc/MVVM/Views/DetailPages/card_detail_page.dart';
-import 'package:mrc/Widgets/custom_uni_cards_shimmer.dart';
 import 'package:mrc/Widgets/widget.dart';
 import 'package:mrc/utils/app_routes.dart';
-import 'package:provider/provider.dart';
 import '../../utils/utils.dart';
-import '../View Model/universities_view_model.dart';
 
 class CustomUniCards extends StatelessWidget {
-  const CustomUniCards({Key? key}) : super(key: key);
+  final List<Datum> data;
+  const CustomUniCards({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    UniversitiesViewModel universitiesInfoModel =
-        context.watch<UniversitiesViewModel>();
-    if (universitiesInfoModel.loading) {
-      return const CustomUniCardsShimmer();
-    }
-    if (universitiesInfoModel.modelError != null) {
-      return const CustomText(text: "Error ");
-    }
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: universitiesInfoModel.universitiesInfoModel!.data!
+        children: data
             .map((e) => InkWell(
                   onTap: () {
                     KRoutes.push(
@@ -49,8 +40,7 @@ class CustomUniCards extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            e.banner ??
-                                "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+                            e.banner ?? "",
                             errorBuilder: (context, error, stackTrace) {
                               return ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
@@ -62,16 +52,20 @@ class CustomUniCards extends StatelessWidget {
                                   loadingBuilder:
                                       (context, child, loadingProgress) {
                                     if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                            : null,
+                                    return SizedBox(
+                                      height: 160,
+                                      width: 250,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
                                       ),
                                     );
                                   },
@@ -85,27 +79,23 @@ class CustomUniCards extends StatelessWidget {
                               if (loadingProgress == null) {
                                 return child;
                               }
-                              return CircularProgressIndicator(
-                                value: loadingProgress.cumulativeBytesLoaded
-                                    .toDouble(),
+                              return SizedBox(
+                                height: 160,
+                                width: 250,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                ),
                               );
                             },
                           ),
                         ),
-                        // Container(
-                        //   height: 160,
-                        //   width: 250,
-                        //   decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //     image: DecorationImage(
-                        //         image: NetworkImage(
-                        //           e.banner ??
-                        //               "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
-                        //         ),
-                        //         onError: (exception, stackTrace) {},
-                        //         fit: BoxFit.cover),
-                        //   ),
-                        // ),
                         const SizedBox(
                           height: 10,
                         ),

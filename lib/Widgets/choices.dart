@@ -3,7 +3,9 @@ import 'package:mrc/utils/utils.dart';
 
 class Choices extends StatefulWidget {
   final List filters;
-  const Choices({Key? key, required this.filters}) : super(key: key);
+  final String category;
+  const Choices({Key? key, required this.filters, required this.category})
+      : super(key: key);
 
   @override
   State<Choices> createState() => _ChoicesState();
@@ -19,6 +21,8 @@ class _ChoicesState extends State<Choices> {
           (index) => GestureDetector(
                 onTap: () {
                   setState(() {
+                    searchFilter[widget.category] =
+                        widget.filters[index]["name"];
                     trackValue = index + 1;
                   });
                 },

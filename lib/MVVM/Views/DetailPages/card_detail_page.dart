@@ -116,23 +116,27 @@ class _CardDetailPageState extends State<CardDetailPage> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                widget.universitiesInfo.banner ??
-                    "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+                widget.universitiesInfo.banner ?? "",
                 errorBuilder: (context, error, stackTrace) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       "http://www.sacredheart.edu/media/shu-media/site-assets/images/Sacred-Heart-OG.png",
                       height: 200,
+                      width: double.infinity,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
+                        return SizedBox(
+                          height: 200,
+                          width: double.infinity,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
                           ),
                         );
                       },
@@ -141,12 +145,22 @@ class _CardDetailPageState extends State<CardDetailPage> {
                 },
                 fit: BoxFit.cover,
                 height: 200,
+                width: double.infinity,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) {
                     return child;
                   }
-                  return CircularProgressIndicator(
-                    value: loadingProgress.cumulativeBytesLoaded.toDouble(),
+                  return SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    ),
                   );
                 },
               ),
@@ -180,37 +194,39 @@ class _CardDetailPageState extends State<CardDetailPage> {
                 : Row(
                     children: List.generate(
                         (widget.universitiesInfo.courses as List).length,
-                        (index) => GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedId = index;
-                                });
-                              },
-                              child: Container(
-                                  margin: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 1,
-                                        color: selectedId == index
-                                            ? primaryColor
-                                            : kblack,
-                                      ),
-                                      color: selectedId == index
-                                          ? primaryColor.withOpacity(0.1)
-                                          : kWhite,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  child: Text(
-                                    widget.universitiesInfo.courses![index].name
-                                        .toString(),
-                                    style: TextStyle(
-                                        color: selectedId == index
-                                            ? primaryColor
-                                            : kblack,
-                                        fontWeight: FontWeight.bold),
-                                  )),
+                        (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedId = index;
+                          });
+                        },
+                        child: Container(
+                            margin: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: selectedId == index
+                                      ? primaryColor
+                                      : kblack,
+                                ),
+                                color: selectedId == index
+                                    ? primaryColor.withOpacity(0.1)
+                                    : kWhite,
+                                borderRadius: BorderRadius.circular(15)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            child: Text(
+                              widget.universitiesInfo.courses![index].name
+                                  .toString(),
+                              style: TextStyle(
+                                  color: selectedId == index
+                                      ? primaryColor
+                                      : kblack,
+                                  fontWeight: FontWeight.bold),
                             )),
+                      );
+                    }),
                   ),
             const SizedBox(
               height: 10,
@@ -237,7 +253,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
             const SizedBox(
               height: 10,
             ),
-            CustomText(text: widget.universitiesInfo.ranking!),
+            CustomText(text: widget.universitiesInfo.ranking ?? "1"),
           ],
         ),
       ),

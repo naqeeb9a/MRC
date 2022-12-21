@@ -1,26 +1,103 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:mrc/MVVM/View%20Model/Lead%20Progress/lead_progress_view_model.dart';
+import 'package:mrc/MVVM/Views/Authentication/login.dart';
+import 'package:mrc/Widgets/widget.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
-import '../../../Widgets/custom_text.dart';
+import '../../../utils/app_routes.dart';
 import '../../../utils/utils.dart';
 
-class ProgressScreen extends StatelessWidget {
+class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
 
   @override
+  State<ProgressScreen> createState() => _ProgressScreenState();
+}
+
+class _ProgressScreenState extends State<ProgressScreen> {
+  @override
   Widget build(BuildContext context) {
+    if (userData == "guest") {
+      return Scaffold(
+        appBar: BaseAppBar(
+            title: "Progress",
+            appBar: AppBar(),
+            widgets: const [],
+            appBarHeight: 50),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            LottieBuilder.asset("assets/login.json"),
+            const SizedBox(
+              height: 20,
+            ),
+            const CustomText(text: "Please login to see your progress"),
+            const SizedBox(
+              height: 20,
+            ),
+            CustomButton(
+              buttonColor: primaryColor,
+              text: "Login",
+              function: () async {
+                SharedPreferences user = await SharedPreferences.getInstance();
+                user.remove("user");
+                KRoutes.pushAndRemoveUntil(globalContext, const Login());
+              },
+              textColor: kWhite,
+            )
+          ],
+        ),
+      );
+    }
+    LeadProgressViewModel leadProgressViewModel =
+        context.watch<LeadProgressViewModel>();
     return Scaffold(
       body: Column(
         children: [
           imageHeader(),
           const Spacer(),
-          progressSteps(),
+          progressSteps(leadProgressViewModel),
           const Spacer(),
         ],
       ),
     );
   }
 
-  Widget progressSteps() {
+  Widget progressSteps(LeadProgressViewModel leadProgressViewModel) {
+    if (leadProgressViewModel.loading) {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: const [1, 2, 3, 4, 5, 6]
+              .map(
+                (e) => Shimmer.fromColors(
+                  highlightColor: kWhite,
+                  baseColor: kGrey.withOpacity(0.3),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                          offset: const Offset(0, 0),
+                          color: kGrey.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 2)
+                    ], borderRadius: BorderRadius.circular(15), color: kWhite),
+                    height: 150,
+                    width: 150,
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      );
+    }
+    if (leadProgressViewModel.modelError != null) {
+      return const CustomText(text: "Error retriving data");
+    }
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(

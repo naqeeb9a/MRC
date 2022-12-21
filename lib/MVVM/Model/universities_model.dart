@@ -147,11 +147,11 @@ class Course {
   });
 
   final int? id;
-  final Field? name;
+  final String? name;
   final Description? description;
   final String? cost;
   final EligibilityCriteria? eligibilityCriteria;
-  final Field? field;
+  final String? field;
   final dynamic type;
   final dynamic ranking;
   final Status? status;
@@ -216,8 +216,8 @@ final eligibilityCriteriaValues =
 
 enum Field { DATA_SCIENCE, CS, IT }
 
-final fieldValues = EnumValues(
-    {"CS": Field.CS, "Data Science": Field.DATA_SCIENCE, "IT": Field.IT});
+final fieldValues =
+    EnumValues({"CS": "CS", "Data Science": "Data Science", "IT": "IT"});
 
 enum Status { ENABLE }
 

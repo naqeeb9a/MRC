@@ -30,7 +30,11 @@ class GeneralAppSearchWidget extends StatelessWidget {
         GestureDetector(
           onTap: () => !enabled
               ? KRoutes.push(context, const SearchScreen())
-              : KRoutes.push(context, const FilterScreen()),
+              : KRoutes.push(
+                  context,
+                  FilterScreen(
+                    text: controller!.text,
+                  )),
           child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
